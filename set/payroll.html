@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Payslip</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm rounded px-4">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">Employee Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse justify-content-between" id="navMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="personal.html">Personal Details</a></li>
+          <li class="nav-item"><a class="nav-link" href="salary_structure.html">Salary Structure</a></li>
+          <li class="nav-item"><a class="nav-link" href="salary_advance.html">Salary Advance</a></li>
+          <li class="nav-item"><a class="nav-link" href="payroll.html">Payslip</a></li>
+        </ul>
+        <a href="login.html" class="btn btn-outline-danger">Logout</a>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="container mt-5 text-center">
+    <div class="card shadow-sm">
+      <div class="card-header bg-info text-white">View Payslip</div>
+      <div class="card-body">
+        <button id="fetchPayrollBtn" class="btn btn-primary mb-3">View Payslip</button>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Month</th>
+                <th>Total Payable</th>
+                <th>Total Deductions</th>
+                <th>Net Payable</th>
+              </tr>
+            </thead>
+            <tbody id="payrollDetails">
+              <tr>
+                <td colspan="3" class="text-muted text-center">
+                  Click "View Payslip" to load data.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- footer -->
+  <!-- include _footer.html here -->
+  <script src="script.js"></script>
+</body>
+</html>

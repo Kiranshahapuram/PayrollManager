@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Leave Entry</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm rounded px-4">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">HR Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-between" id="navMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="manage_employees.html">Manage Employees</a></li>
+          <li class="nav-item"><a class="nav-link" href="salary_structure2.html">Manage Salary Structure</a></li>
+          <li class="nav-item"><a class="nav-link" href="salary_advance_hr.html">Manage Salary Advance</a></li>
+          <li class="nav-item"><a class="nav-link" href="process_payroll.html">Process Payroll</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaves.html">Leave Entry</a></li>
+          <li class="nav-item"><a class="nav-link" href="performance.html">Performance Reports</a></li>
+        </ul>
+        <a href="login.html" class="btn btn-outline-danger">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="mb-4">Add Leave Entry</h2>
+    <form id="leaveForm" class="p-4 shadow-sm rounded bg-light mb-4">
+      <div class="mb-3">
+        <label for="leave_emp_id" class="form-label">Employee ID:</label>
+        <input type="text" id="leave_emp_id" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="leave_month" class="form-label">Month & Year:</label>
+        <input type="month" id="leave_month" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="unpaid_leaves" class="form-label">Unpaid Leaves:</label>
+        <input type="number" id="unpaid_leaves" class="form-control" required min="0" />
+      </div>
+
+      <div class="d-grid">
+        <button type="button" class="btn btn-primary" onclick="addLeave()">➕ Add Leave</button>
+      </div>
+    </form>
+
+    <div id="leave_result"></div>
+  </div>
+
+  <!-- Bootstrap JS (for toggler etc.) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    console.log("Inline script for leaves.html loaded successfully!");
+
+    const API_BASE_URL = "http://127.0.0.1:8000"; // Change this to your actual FastAPI server URL
+
+    function addLeave() {
+        console.log("addLeave function triggered");
+
+        const leaveResult = document.getElementById("leave_result");
+        if (!leaveResult) {
+            console.error("leave_result element not found");
+            return;
+        }
+
+        const employeeid = parseInt(document.getElementById("leave_emp_id")?.value) || 0;
+        const month = document.getElementById("leave_month")?.value || "";
+        const unpaidleaves = parseInt(document.getElementById("unpaid_leaves")?.value) || 0;
+
+        // Validate inputs
+        if (!employeeid || employeeid <= 0) {
+            leaveResult.innerText = "Please enter a valid Employee ID.";
+            console.log("Validation failed: Invalid employee ID");
+            return;
+        }
+        if (!month || !/^\d{4}-\d{2}$/.test(month)) {
+            leaveResult.innerText = "Please select a valid Month and Year (YYYY-MM).";
+            console.log("Validation failed: Invalid month format");
+            return;
+        }
+        if (isNaN(unpaidleaves) || unpaidleaves < 0) {
+            leaveResult.innerText = "Please enter a valid number of unpaid leaves (0 or more).";
+            console.log("Validation failed: Invalid unpaid leaves");
+            return;
+        }
+
+        // Format effectivedate as MMYYYY
+        const [year, monthNum] = month.split("-");
+        const effectivedate = `${monthNum.padStart(2, "0")}${year}`;
+
+        const leaveData = {
+            employeeid: employeeid,
+            effectivedate: effectivedate,
+            unpaidleaves: unpaidleaves
+        };
+
+        console.log("Sending leave data:", leaveData);
+
+        fetch(`${API_BASE_URL}/api/leaves/leaves/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(leaveData)
+        })
+        .then(async res => {
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(JSON.stringify(errorData));
+            }
+            return res.json();
+        })
+        .then(data => {
+            leaveResult.innerText = "Leave entry created successfully.";
+            console.log("Leave created:", data);
+            document.getElementById("leaveForm").reset();
+        })
+        .catch(error => {
+            try {
+                const errorDetails = JSON.parse(error.message);
+                const errorMessage = errorDetails.detail.map(err => `${err.loc.join('.')}: ${err.msg}`).join('; ');
+                leaveResult.innerText = `Error creating leave entry: ${errorMessage}`;
+                console.error("Validation Error:", errorDetails);
+            } catch {
+                leaveResult.innerText = `Error creating leave entry: ${error.message}`;
+                console.error("Fetch Error:", error);
+            }
+        });
+    }
+  </script>
+</body>
+</html>

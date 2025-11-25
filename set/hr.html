@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>HR Dashboard</h2>
+
+        <!-- Manage Employees Section -->
+        <div class="section">
+            <h3>Manage Employees</h3>
+            <form id="manageEmpForm">
+                <label for="emp_id">Employee ID (For View/Delete):</label>
+                <input type="text" id="emp_id" placeholder="Enter Employee ID">
+
+                <div id="add_emp_fields" class="hidden">
+                    <label>First Name:</label>
+                    <input type="text" id="first_name" placeholder="Enter First Name">
+
+                    <label>Last Name:</label>
+                    <input type="text" id="last_name" placeholder="Enter Last Name">
+
+                    <label>Date of Birth:</label>
+                    <input type="date" id="dob">
+
+                    <label>Gender:</label>
+                    <select id="gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <label>Address:</label>
+                    <textarea id="address" placeholder="Enter Address"></textarea>
+
+                    <label>Phone:</label>
+                    <input type="text" id="phone" placeholder="Enter Phone Number">
+
+                    <label>Email:</label>
+                    <input type="email" id="email" placeholder="Enter Email">
+
+                    <label>IFSC Code:</label>
+                    <input type="text" id="ifsc" placeholder="Enter IFSC Code">
+
+                    <label>Bank Account Number:</label>
+                    <input type="text" id="bank_account" placeholder="Enter Bank Account Number">
+
+                    <label>Hire Date:</label>
+                    <input type="date" id="hire_date">
+                </div>
+
+                <div class="button-group">
+                    <button type="button" id="addEmpBtn" onclick="createEmployee()">➕create</button>
+                    <button type="button" id="deleteEmpBtn" onclick="toggleAddEmployee() ()">add employee</button>
+                    <button type="button" id="viewEmpBtn" onclick="viewEmployee()">👀 View Employee</button>
+                </div>
+            </form>
+            <div id="emp_result"></div>
+        </div>
+
+        <!-- Modify Salary Structure -->
+        <div class="section">
+            <h3>Modify/Create Salary Structure</h3>
+            <form id="modifySalaryForm">
+                <label>Employee ID:</label>
+                <input type="text" id="salary_emp_id" placeholder="Enter Employee ID">
+
+                <label>Effective Date:</label>
+                <input type="date" id="effective_date">
+
+                <label>Basic Pay:</label>
+                <input type="text" id="basic_pay" placeholder="Enter Basic Pay">
+
+                <label>HRA:</label>
+                <input type="text" id="hra" placeholder="Enter HRA">
+
+                <label>Other Allowances:</label>
+                <input type="text" id="other_allowances" placeholder="Enter Other Allowances">
+
+                <div class="button-group">
+                    <button type="button" onclick="modifySalary()">💰 Modify Salary</button>
+                    <button type="button" onclick="createSalaryStructure()">➕ Create Salary Structure</button>
+                </div>
+            </form>
+            <div id="salary_result"></div>
+        </div>
+
+
+        <div class="section">
+            <h3>View Salary Advances for a Month</h3>
+            <form id="viewSalaryAdvancesForm">
+                <label for="view_advance_month">Select Month & Year:</label>
+                <input type="month" id="view_advance_month" required>
+        
+                <div class="button-group">
+                    <button type="button" onclick="viewSalaryAdvances()">🔍 View Salary Advances</button>
+                </div>
+            </form>
+            <div id="salary_advance_result"></div>
+        </div>
+        
+<!-- Manage Salary Advance -->
+<div class="section">
+    <h3>Manage Salary Advance</h3>
+    <form id="salaryAdvanceForm">
+        <label for="advance_emp_id">Employee ID:</label>
+        <input type="text" id="advance_emp_id" placeholder="Enter Employee ID" required>
+
+        <label for="advance_month">Month & Year:</label>
+        <input type="month" id="advance_month" required>
+
+        <div class="button-group">
+            <button type="button" onclick="approveSalaryAdvance()">✅ Approve</button>
+            <button type="button" onclick="rejectSalaryAdvance()">❌ Reject</button>
+        </div>
+    </form>
+    <div id="advance_result"></div>
+</div>
+
+
+        <!-- Payroll Management -->
+        <div class="section">
+            <h3>Process Payroll</h3>
+            <form id="processPayrollForm">
+
+
+                <label>Month-Year:</label>
+                <input type="date" id="payroll_month_year">
+
+                <div class="button-group">
+                    <button type="button" onclick="processPayrollAll()">💰 Process Payroll</button>
+                </div>
+            </form>
+            <div id="payroll_result"></div>
+        </div>
+    </div>
+    <form id="performance_form">
+        <label for="perf_emp_id">Employee ID:</label>
+        <input type="text" id="perf_emp_id" required>
+    
+        <label for="perf_month">Month & Year:</label>
+        <input type="month" id="perf_month" required>
+    
+        <label for="rating">Rating (0–5):</label>
+        <input type="number" id="rating" step="0.1" min="0" max="5" required>
+    
+        <label for="comments">Comments:</label>
+        <textarea id="comments" placeholder="Optional comments..."></textarea>
+    
+        <div class="button-group">
+            <button type="submit">📈 Add Performance</button>
+        </div>
+    </form>
+    
+    <div id="performance_result"></div>
+    
+    
+    <div class="section">
+        <h3>Add Leave Entry</h3>
+        <form id="leaveForm">
+            <label for="leave_emp_id">Employee ID:</label>
+            <input type="text" id="leave_emp_id" required>
+    
+            <label for="leave_month">Month & Year:</label>
+            <input type="month" id="leave_month" required>
+    
+            <label for="unpaid_leaves">Unpaid Leaves:</label>
+            <input type="number" id="unpaid_leaves" required>
+    
+            <div class="button-group">
+                <button type="button" onclick="addLeave()">➕ Add Leave</button>
+            </div>
+        </form>
+        <div id="leave_result"></div>
+    </div>
+    <script>
+        function formatToYYYYMM(monthInput) {
+    const [year, month] = monthInput.split("-");
+    return `${year}-${month}-01`;
+}
+
+    function addPerformance() {
+    const employeeid = parseInt(document.getElementById("perf_emp_id").value);
+    const month = document.getElementById("perf_month").value;
+    const reviewdate = formatToYYYYMM(month);
+    const rating = parseFloat(document.getElementById("rating").value);
+    const comments = document.getElementById("comments").value;
+
+    const performanceData = {
+        year: parseInt(month.split("-")[0]),
+        month: parseInt(month.split("-")[1]),
+        rating: rating,
+        comments: comments
+    };
+
+    fetch(`http://127.0.0.1:8000/api/employees/performance?employeeid=${employeeid}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(performanceData)
+    })
+    .then(res => {
+        if (!res.ok) throw res;
+        return res.json();
+    })
+    .then(data => {
+        document.getElementById("performance_result").innerText = "Performance review submitted successfully.";
+        console.log("Performance submitted:", data);
+    })
+    .catch(async err => {
+        const errorText = await err.text();
+        document.getElementById("performance_result").innerText = `Error: ${errorText}`;
+        console.error("Performance submission error:", errorText);
+    });
+}
+    </script>
+    <script src="script2.js"></script>
+</body>
+</html>
